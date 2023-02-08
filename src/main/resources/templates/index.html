@@ -31,7 +31,7 @@
                         <a class="nav-link" aria-current="page" href="#">WHAT'S ON</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">MOVIES</a>
+                        <a class="nav-link" th:href="@{/films}">MOVIES</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/genres}">GENRES</a>
@@ -44,19 +44,23 @@
             </div>
         </div>
     </nav>
-    <div>
+    <div class="text-center">
         <h5>Our Halls</h5>
     </div>
-    <div class="card-group" th:each="hall : ${halls}">
-        <div class="card">
-            <img src="" class="card-img-top" alt="...">
+    <div class="card-group">
+        <div class="card p-2" th:each="hall : ${halls}">
+            <div th:switch="${hall.name}">
+            <img th:case="'SKY'" src="/img/HALL_SKY.jpg" th:src="@{/img/HALL_SKY.jpg}" class="card-img-top" alt="no image..." />
+            <img th:case="'ISLAND'" src="/img/HALL_ISLAND.png" th:src="@{/img/HALL_ISLAND.png}" class="card-img-top" alt="no image..." />
+            <img th:case="'OCEAN'" src="/img/HALL_OCEAN.jpg" th:src="@{/img/HALL_OCEAN.jpg}" class="card-img-top" alt="no image..." />
+            </div>
             <div class="card-body">
                 <h5 class="card-title" th:text="${hall.name}"/>
                 <p class="card-text" th:text="${hall.description}"/>
-                <p class="card-text">
-                    <span>Total seats : </span>
-                    <small class="text-muted" th:text="${hall.placeCount}"></small>
-                </p>
+            </div>
+            <div class="card-footer">
+                <span>Total seats : </span>
+                <small class="text-muted" th:text="${hall.placeCount}"></small>
             </div>
         </div>
     </div>

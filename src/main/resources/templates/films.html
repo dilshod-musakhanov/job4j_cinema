@@ -18,7 +18,7 @@
 <body>
 <div class="container">
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" th:href="@{index}">CINEMA</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
@@ -44,17 +44,33 @@
             </div>
         </div>
     </nav>
-
-    <div>
-        <table class="table">
-            <tbody>
-            <tr th:each="genre : ${genres}">
-                <td>
-                    <span th:text="${genre.name}"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="text-center">
+        <h5>Movies</h5>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 g-1">
+        <div class="card mb-3" th:each="film : ${films}">
+            <img th:src="@{/files/{fileId}(fileId=*{film.fileId})}" class="w-220" alt="No image">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${film.name}"/>
+                <p class="card-text" th:text="${film.description}"/>
+                <p class="card-text">
+                    <span>Year : </span>
+                    <small class="text-muted" th:text="${film.year}"></small>
+                </p>
+                <p class="card-text">
+                    <span>Genre : </span>
+                    <small class="text-muted" th:text="${film.genre.getName}"></small>
+                </p>
+                <p class="card-text">
+                    <span>Minimal age : </span>
+                    <small class="text-muted" th:text="${film.minimalAge}"></small>
+                </p>
+                <p class="card-text">
+                    <span>Duration in min : </span>
+                    <small class="text-muted" th:text="${film.durationInMinutes}"></small>
+                </p>
+            </div>
+    </div>
     </div>
 </div>
 </body>
