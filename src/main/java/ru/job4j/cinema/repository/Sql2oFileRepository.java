@@ -18,7 +18,7 @@ public class Sql2oFileRepository implements FileRepository {
     @Override
     public Optional<File> findById(int id) {
         try (var connection = sql2o.open()) {
-            var query = connection.createQuery("SELECT FROM files WHERE id  = :id");
+            var query = connection.createQuery("SELECT * FROM files WHERE id  = :id");
             var file = query.addParameter("id", id).executeAndFetchFirst(File.class);
             return Optional.ofNullable(file);
         }

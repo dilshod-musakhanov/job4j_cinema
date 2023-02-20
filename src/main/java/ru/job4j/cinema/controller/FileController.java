@@ -18,7 +18,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
         var conentOptional = fileService.getFileById(id);
         if (conentOptional.isEmpty()) {
@@ -26,4 +26,5 @@ public class FileController {
         }
         return ResponseEntity.ok(conentOptional.get().getContent());
     }
+
 }
