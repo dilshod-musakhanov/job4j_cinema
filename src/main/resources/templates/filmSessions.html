@@ -18,7 +18,7 @@
 <body>
 <div class="container">
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" th:href="@{index}">CINEMA</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
@@ -44,17 +44,30 @@
             </div>
         </div>
     </nav>
-
-    <div>
-        <table class="table">
-            <tbody>
-            <tr th:each="genre : ${genres}">
-                <td>
-                    <span th:text="${genre.name}"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="text-center">
+        <h5>What's on</h5>
+    </div>
+    <div class="card-group">
+        <div class="card p-2" th:each="filmSession : ${filmSessions}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${filmSession.film}"/>
+                <p class="card-text">
+                    <span> Start Time: </span>
+                    <small th:text="${filmSession.startTime}"></small>
+                <p class="card-text">
+                <span> End Time: </span>
+                <small th:text="${filmSession.endTime}"></small>
+                <p class="card-text">
+                <span>Hall : </span>
+                <a th:href="@{index}" class="text-decoration-none">
+                    <small class="text-muted" th:text="${filmSession.hall}"></small>
+                </a>
+                </p>
+            </div>
+            <div class="card-footer" >
+                <a href="#" class="btn btn-outline-dark">Buy Ticket Now</a>
+            </div>
+        </div>
     </div>
 </div>
 </body>
