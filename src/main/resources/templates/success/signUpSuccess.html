@@ -17,7 +17,7 @@
 </head>
 <body>
 <div class="container">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" th:href="@{index}">CINEMA</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
@@ -36,33 +36,23 @@
                         <a class="nav-link" th:href="@{/genres}">GENRES</a>
                     </li>
                 </ul>
-                <div class="d-flex" th:if="${user.fullName == 'Guest'}">
-                    <a class="nav-link text-secondary" th:href="@{/formAddUser}">
-                        <span>SIGN UP |</span></a>
-                    <a class="nav-link text-secondary" th:href="@{/formLoginUser}">
-                        <span>| LOG IN</span></a>
-                </div>
-                <div class="d-flex" th:if="${user.fullName != 'Guest'}">
-                    <a class="nav-link text-secondary" href="#" th:text="${user.fullName} + ' |'"></a>
-                    <a class="nav-link text-secondary" th:href="@{/formLoginUser}">
-                        <span>| LOG OUT</span></a>
+                <div class="d-flex">
+                    <a class="nav-item nav-link text-secondary" href="@{formAddUser}"><span>SIGN UP |</span></a>
+                    <a class="nav-link text-secondary" th:href="@{/formLoginUser}"><span>| LOG IN</span></a>
                 </div>
             </div>
         </div>
     </nav>
+    <div class="row">
+    </div>
     <div>
-        <div class="text-center mt-3 mb-3">
-            <h5>Genres</h5>
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="alert alert-success" role="alert">
+                    Successfully signed up. Please log in if you wish to buy tickets.
+                </div>
+            </div>
         </div>
-        <table class="table">
-            <tbody>
-            <tr th:each="genre : ${genres}">
-                <td>
-                    <span th:text="${genre.name}"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 </body>

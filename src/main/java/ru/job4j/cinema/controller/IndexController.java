@@ -4,8 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.job4j.cinema.service.HallService;
+import ru.job4j.cinema.util.HttpSessionUtil;
 
-import java.util.Collection;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class IndexController {
@@ -17,7 +18,8 @@ public class IndexController {
     }
 
     @GetMapping("/index")
-    public String mainPageWithHalls(Model model) {
+    public String mainPageWithHalls(Model model, HttpSession session) {
+        HttpSessionUtil.passUserAttribute(model, session);
         model.addAttribute("halls", hallService.findAll());
         return "index";
     }
