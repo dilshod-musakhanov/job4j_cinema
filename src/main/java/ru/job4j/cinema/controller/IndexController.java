@@ -17,7 +17,7 @@ public class IndexController {
         this.hallService = hallService;
     }
 
-    @GetMapping("/index")
+    @GetMapping({"/", "/index"})
     public String mainPageWithHalls(Model model, HttpSession session) {
         HttpSessionUtil.passUserAttribute(model, session);
         model.addAttribute("halls", hallService.findAll());

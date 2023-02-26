@@ -48,6 +48,7 @@ public class UserController {
         if (loginUser.isEmpty()) {
             model.addAttribute(
                     "message", "Incorrect input details or account does not exist");
+
             return "errors/404";
         }
         HttpSession session = req.getSession();
