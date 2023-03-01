@@ -20,4 +20,14 @@ public class SimpleHallService implements HallService {
     public Collection<Hall> findAll() {
         return hallRepository.findAll();
     }
+
+    @Override
+    public Collection<Integer> getRowCountByHallId(int hallId) {
+        return hallRepository.getRowCountByHallId(hallId);
+    }
+
+    @Override
+    public Collection<Integer> getPlacesCountByHallId(int hallId) {
+        return hallRepository.getPlacesCountByHallId(hallId);
+    }
 }

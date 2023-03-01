@@ -7,4 +7,7 @@ import java.util.Collection;
 public interface HallRepository {
 
     Collection<Hall> findAll();
+    Collection<Integer> getRowCountByHallId(int hallId);
+    Collection<Integer> getPlacesCountByHallId(int hallId);
+
 }

@@ -18,4 +18,5 @@
     <include file="scripts/011_dml_insert_to_halls_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/012_dml_insert_to_film_sessions_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/013_dml_update_to_files_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/014_dml_update_to_halls_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
