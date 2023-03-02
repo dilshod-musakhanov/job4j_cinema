@@ -12,6 +12,7 @@ import ru.job4j.cinema.repository.HallRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -45,6 +46,11 @@ public class SimpleFilmSessionService implements FilmSessionService {
             filmSessionDtos.add(filmSessionDto);
         }
         return filmSessionDtos;
+    }
+
+    @Override
+    public Optional<FilmSession> findById(int id) {
+        return filmSessionRepository.findById(id);
     }
 
     private FilmSessionDto createDto(FilmSession filmSession, Map<Integer, String> films, Map<Integer, String> halls) {

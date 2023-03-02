@@ -3,24 +3,50 @@ package ru.job4j.cinema.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import ru.job4j.cinema.service.FilmService;
 import ru.job4j.cinema.service.FilmSessionService;
+import ru.job4j.cinema.service.HallService;
 import ru.job4j.cinema.util.HttpSessionUtil;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/filmSessions")
 public class FilmSessionController {
 
-    FilmSessionService filmSessionService;
+    private final FilmSessionService filmSessionService;
+    private final FilmService filmService;
+    private final HallService hallService;
 
-    public FilmSessionController(FilmSessionService filmSessionService) {
+    public FilmSessionController(FilmSessionService filmSessionService, FilmService filmService, HallService hallService) {
         this.filmSessionService = filmSessionService;
+        this.filmService = filmService;
+        this.hallService = hallService;
     }
 
-    @GetMapping("/filmSessions")
+    @GetMapping
     public String getAllFilmSessionDto(Model model, HttpSession session) {
         HttpSessionUtil.passUserAttribute(model, session);
         model.addAttribute("filmSessions", filmSessionService.findAllFilmSessionDto());
         return "filmSessions";
+    }
+
+    @GetMapping("/{id}")
+    public String findById(Model model, @PathVariable int id, HttpSession session) {
+        HttpSessionUtil.passUserAttribute(model, session);
+        var optionalFilmSession = filmSessionService.findById(id);
+        if (optionalFilmSession.isEmpty()) {
+            model.addAttribute("message", "This film session is no longer available");
+            return "errors/404";
+        }
+        var filmSession = optionalFilmSession.get();
+        model.addAttribute("sessionId", filmSession.getId());
+        model.addAttribute("rows", hallService.getRowCountByHallId(filmSession.getHallsId()));
+        model.addAttribute("places", hallService.getPlacesCountByHallId(filmSession.getHallsId()));
+        model.addAttribute("filmName", filmService.getByFilmId(filmSession.getFilmId()).get().getName());
+        model.addAttribute("filmId", filmService.getByFilmId(filmSession.getFilmId()).get().getId());
+        return "ticket/buyTicket";
     }
 }

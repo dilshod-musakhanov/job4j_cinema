@@ -51,22 +51,38 @@
         </div>
     </nav>
     <div class="text-center mb-3">
-        <h5>Our Halls</h5>
+        <h5>Your choice</h5>
     </div>
-    <div class="card-group">
-        <div class="card p-2" th:each="hall : ${halls}">
-            <div th:switch="${hall.name}">
-            <img th:case="'SKY'" src="/img/HALL_SKY.jpg" th:src="@{/img/HALL_SKY.jpg}" class="card-img-top" alt="no image..." />
-            <img th:case="'ISLAND'" src="/img/HALL_ISLAND.png" th:src="@{/img/HALL_ISLAND.png}" class="card-img-top" alt="no image..." />
-            <img th:case="'OCEAN'" src="/img/HALL_OCEAN.jpg" th:src="@{/img/HALL_OCEAN.jpg}" class="card-img-top" alt="no image..." />
-            </div>
+    <div class="row d-flex align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div class="card-body">
-                <h5 class="card-title" th:text="${hall.name}"/>
-                <p class="card-text" th:text="${hall.description}"/>
-            </div>
-            <div class="card-footer">
-                <span>Total seats : </span>
-                <small class="text-muted" th:text="${hall.rowCount} * ${hall.placeCount}"></small>
+                <form class="ticket-buy-form" th:action="@{/ticket/confirmTicket}">
+                    <input type="hidden" name="sessionId" th:value="${sessionId}">
+                    <input type="hidden" name="userId" th:value="${user.id}">
+                    <div class="title mb-2">
+                        <h5 class="card-title" th:text="${filmName}"/>
+                    </div>
+                    <div class="film-image mb-2">
+                        <img th:src="@{/files/{fileId}(fileId=${filmId})}" th:width="180" alt="No image">
+                    </div>
+                    <div class="mb-3">
+                        <label for="row">Select row</label>
+                        <select class="form-control" id="row" name="rowNumber">
+                            <option th:each="row : ${rows}" th:value="${row}" th:text="${row}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="place">Select seat</label>
+                        <select class="form-control" id="place" name="placeNumber">
+                            <option th:each="place : ${places}" th:value="${place}" th:text="${place}"></option>
+                        </select>
+                    </div>
+                    <p class="card-text">
+                        <button type="submit" class="btn btn-outline-dark">
+                            Continue
+                        </button>
+                    </p>
+                </form>
             </div>
         </div>
     </div>

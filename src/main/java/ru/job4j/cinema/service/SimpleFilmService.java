@@ -10,6 +10,7 @@ import ru.job4j.cinema.repository.GenreRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -39,6 +40,11 @@ public class SimpleFilmService implements FilmService {
             filmDtos.add(filmDto);
         }
         return filmDtos;
+    }
+
+    @Override
+    public Optional<Film> getByFilmId(int filmId) {
+        return filmRepository.getByFilmId(filmId);
     }
 
     private FilmDto createDto(Map<Integer, Genre> genres, Film film) {

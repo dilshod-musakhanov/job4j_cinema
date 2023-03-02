@@ -55,9 +55,13 @@
     </div>
     <div class="row row-cols-1 row-cols-md-2 g-1">
         <div class="card mb-3" th:each="film : ${films}">
-            <img th:src="@{/files/{fileId}(fileId=*{film.fileId})}" th:width="180" alt="No image">
             <div class="card-body">
-                <h5 class="card-title" th:text="${film.name}"/>
+                <div class="film-title">
+                    <h5 class="card-title" th:text="${film.name}"/>
+                </div>
+                <div class="image-session ml-3">
+                    <img th:src="@{/files/{fileId}(fileId=*{film.fileId})}" th:width="180" alt="No image">
+                </div>
                 <p class="card-text" th:text="${film.description}"/>
                 <p class="card-text">
                     <span>Year : </span>

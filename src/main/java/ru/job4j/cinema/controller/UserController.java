@@ -31,10 +31,13 @@ public class UserController {
         Optional<User> signUpUser = userService.add(user);
         if (signUpUser.isEmpty()) {
             model.addAttribute(
-                    "message", "An account already exists. Please use log in option");
+                    "message",
+                    "An account already exists. Please use log in option");
             return "errors/404";
         }
-        return "success/signUpSuccess";
+        model.addAttribute("message",
+                "Successfully signed up. Please log in if you wish to buy a ticket");
+        return "success/success";
     }
 
     @GetMapping("/formLoginUser")
