@@ -10,9 +10,9 @@ import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.service.FilmService;
 import ru.job4j.cinema.service.FilmSessionService;
 import ru.job4j.cinema.service.TicketService;
-import ru.job4j.cinema.util.HttpSessionUtil;
 
 import javax.servlet.http.HttpSession;
+
 
 @Controller
 @RequestMapping("/ticket")
@@ -29,13 +29,16 @@ public class TicketController {
     }
 
     @GetMapping("/confirmTicket")
-    public String confirmTicket(Model model, @ModelAttribute Ticket ticket, HttpSession session) {
-        HttpSessionUtil.passUserAttribute(model, session);
+    public String confirmTicket(Model model, @ModelAttribute Ticket ticket) {
+        if (ticket.getUserId() == 0) {
+            model.addAttribute("message", "You have to log in first to buy ticket");
+            return "errors/404";
+        }
         var filmSession = filmSessionService.findById(ticket.getSessionId());
         var film = filmService.getByFilmId(filmSession.get().getFilmId());
         if (film.isEmpty()) {
-            model.addAttribute("message", "oops...this movie is not found");
-            return "error/404";
+            model.addAttribute("message", "This movie is not found");
+            return "errors/404";
         }
         model.addAttribute("ticketSession", ticket.getSessionId());
         model.addAttribute("ticketUserId", ticket.getUserId());
@@ -48,8 +51,7 @@ public class TicketController {
     }
 
     @PostMapping("/confirmAndBuyTicket")
-    public String confirmAndBuyTicket(Model model, @ModelAttribute Ticket ticket, HttpSession session) {
-        HttpSessionUtil.passUserAttribute(model, session);
+    public String confirmAndBuyTicket(Model model, @ModelAttribute Ticket ticket) {
         Ticket newT = new Ticket();
         newT.setSessionId(ticket.getSessionId());
         newT.setRowNumber(ticket.getRowNumber());

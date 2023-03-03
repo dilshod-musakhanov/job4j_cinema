@@ -4,9 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.job4j.cinema.service.GenreService;
-import ru.job4j.cinema.util.HttpSessionUtil;
 
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class GenreController {
@@ -18,9 +16,8 @@ public class GenreController {
     }
 
     @GetMapping("/genres")
-    public String genres(Model model, HttpSession session) {
-        HttpSessionUtil.passUserAttribute(model, session);
+    public String genres(Model model) {
         model.addAttribute("genres", genreService.findAll());
-        return "genres";
+        return "genre/genres";
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.job4j.cinema.filter.SessionFilter;
 import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.UserService;
 
@@ -51,7 +52,6 @@ public class UserController {
         if (loginUser.isEmpty()) {
             model.addAttribute(
                     "message", "Incorrect input details or account does not exist");
-
             return "errors/404";
         }
         HttpSession session = req.getSession();

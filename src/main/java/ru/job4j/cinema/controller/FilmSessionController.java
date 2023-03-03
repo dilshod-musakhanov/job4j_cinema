@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.job4j.cinema.service.FilmService;
 import ru.job4j.cinema.service.FilmSessionService;
 import ru.job4j.cinema.service.HallService;
-import ru.job4j.cinema.util.HttpSessionUtil;
 
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/filmSessions")
@@ -27,15 +25,13 @@ public class FilmSessionController {
     }
 
     @GetMapping
-    public String getAllFilmSessionDto(Model model, HttpSession session) {
-        HttpSessionUtil.passUserAttribute(model, session);
+    public String getAllFilmSessionDto(Model model) {
         model.addAttribute("filmSessions", filmSessionService.findAllFilmSessionDto());
-        return "filmSessions";
+        return "filmSession/filmSessions";
     }
 
     @GetMapping("/{id}")
-    public String findById(Model model, @PathVariable int id, HttpSession session) {
-        HttpSessionUtil.passUserAttribute(model, session);
+    public String findById(Model model, @PathVariable int id) {
         var optionalFilmSession = filmSessionService.findById(id);
         if (optionalFilmSession.isEmpty()) {
             model.addAttribute("message", "This film session is no longer available");
