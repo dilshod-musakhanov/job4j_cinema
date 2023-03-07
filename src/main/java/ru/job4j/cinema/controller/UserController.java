@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.job4j.cinema.filter.SessionFilter;
 import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.UserService;
 
@@ -38,7 +37,7 @@ public class UserController {
         }
         model.addAttribute("message",
                 "Successfully signed up. Please log in if you wish to buy a ticket");
-        return "success/success";
+        return "success/signUpSuccess";
     }
 
     @GetMapping("/formLoginUser")
@@ -62,6 +61,6 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/user/login";
+        return "redirect:/formLoginUser";
     }
 }

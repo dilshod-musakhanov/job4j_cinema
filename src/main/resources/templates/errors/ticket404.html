@@ -19,7 +19,7 @@
 <div class="container">
     <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}">CINEMA</a>
+            <a class="navbar-brand" th:href="@{index}">CINEMA</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -50,46 +50,13 @@
             </div>
         </div>
     </nav>
-    <div class="text-center mb-3">
-        <h5>Your choice</h5>
-    </div>
-    <div class="row d-flex align-items-center h-100">
-        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card-body">
-                <form class="ticket-buy-form" th:action="@{/ticket/confirmAndBuyTicket}" method="POST">
-                    <input type="hidden" name="sessionId" th:value="${ticketSession}">
-                    <input type="hidden" name="userId" th:value="${ticketUserId}">
-                    <input type="hidden" name="rowNumber" th:value="${ticketRowNumber}">
-                    <input type="hidden" name="placeNumber" th:value="${ticketPlaceNumber}">
-                    <p class="card-text">
-                        <span>Name : </span>
-                        <small class="text-muted" th:text="${ticketFilmName}"></small>
-                    </p>
-                    <p class="card-text">
-                        <span>Star Time : </span>
-                        <small class="text-muted" th:text="${ticketSessionStart}"></small>
-                    </p>
-                    <p class="card-text">
-                        <span>End Time : </span>
-                        <small class="text-muted" th:text="${ticketSessionEnd}"></small>
-                    </p>
-                    <p class="card-text">
-                        <span>Row number : </span>
-                        <small class="text-muted" th:text="${ticketRowNumber}"></small>
-                    </p>
-                    <p class="card-text">
-                        <span>Seat number : </span>
-                        <small class="text-muted" th:text="${ticketPlaceNumber}"></small>
-                    </p>
-                    <p class="card-text">
-                        <button class="btn btn-outline-dark" type="submit">
-                            Confirm and Buy
-                        </button>
-                        <a th:href="@{/filmSessions}" class="btn btn-outline-dark">
-                            Cancel
-                        </a>
-                    </p>
-                <form>
+    <div>
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="alert alert-warning" role="warning">
+                    <h4 class="alert-heading">Oops!</h4>
+                    <p class="text" th:text="${message}"></p>
+                </div>
             </div>
         </div>
     </div>

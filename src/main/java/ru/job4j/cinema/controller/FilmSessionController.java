@@ -38,11 +38,12 @@ public class FilmSessionController {
             return "errors/404";
         }
         var filmSession = optionalFilmSession.get();
+        var filmSessionFilm = filmService.getByFilmId(filmSession.getFilmId()).get();
         model.addAttribute("sessionId", filmSession.getId());
         model.addAttribute("rows", hallService.getRowCountByHallId(filmSession.getHallsId()));
         model.addAttribute("places", hallService.getPlacesCountByHallId(filmSession.getHallsId()));
-        model.addAttribute("filmName", filmService.getByFilmId(filmSession.getFilmId()).get().getName());
-        model.addAttribute("filmId", filmService.getByFilmId(filmSession.getFilmId()).get().getId());
+        model.addAttribute("filmName", filmSessionFilm.getName());
+        model.addAttribute("filmId", filmSessionFilm.getId());
         return "ticket/buyTicket";
     }
 }

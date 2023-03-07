@@ -11,8 +11,6 @@ import ru.job4j.cinema.service.FilmService;
 import ru.job4j.cinema.service.FilmSessionService;
 import ru.job4j.cinema.service.TicketService;
 
-import javax.servlet.http.HttpSession;
-
 
 @Controller
 @RequestMapping("/ticket")
@@ -64,11 +62,11 @@ public class TicketController {
             model.addAttribute(
                     "message",
                     "Ticket is already sold out. Choose other seat or session");
-            return "errors/404";
+            return "errors/ticket404";
         }
         model.addAttribute(
                 "message",
                 "Ticket sent to your email. Enjoy watching " + film.get().getName());
-        return "success/success";
+        return "success/ticketSuccess";
     }
 }
