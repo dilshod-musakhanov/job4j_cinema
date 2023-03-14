@@ -5,6 +5,7 @@ import org.sql2o.Sql2o;
 import ru.job4j.cinema.model.User;
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
@@ -33,6 +34,7 @@ public class Sql2oUserRepository implements UserRepository {
             int generatedId = query.executeUpdate().getKey(Integer.class);
             user.setId(generatedId);
             optionalUser = Optional.of(user);
+            LOG.error("not error just to see what is added " + user.getFullName() + " " + user.getId());
         } catch (Exception e) {
             LOG.error("Exception in adding User by email :" + user.getEmail() + " " + e);
         }
@@ -69,6 +71,28 @@ public class Sql2oUserRepository implements UserRepository {
                 LOG.error("Exception in finding User by id :" + id);
             }
             return Optional.ofNullable(user);
+        }
+    }
+
+    @Override
+    public Collection<User> findAll() {
+        try (var connection = sql2o.open()) {
+            var query = connection.createQuery("SELECT * FROM users");
+            return query.setColumnMappings(User.COLUMN_MAPPING).executeAndFetch(User.class);
+        }
+    }
+
+    @Override
+    public boolean deleteUserById(int id) {
+        try (var connection = sql2o.open()) {
+            var query = connection.createQuery("DELETE FROM users WHERE id = :id")
+                    .addParameter("id", id);
+            var result = query.executeUpdate().getResult();
+            LOG.error("just to see the userId  **** " + id);
+            var result2 = connection.createQuery("truncate table users").executeUpdate().getResult();
+            LOG.error("just to see result  **** " + result);
+            LOG.error("just to see result2  **** " + result2);
+            return result > 0;
         }
     }
 }
