@@ -32,8 +32,8 @@ public class TicketController {
             model.addAttribute("message", "You have to log in first to buy ticket");
             return "errors/404";
         }
-        var filmSession = filmSessionService.findById(ticket.getSessionId());
-        var film = filmService.getByFilmId(filmSession.get().getFilmId());
+        var filmSession = filmSessionService.findByFilmSessionId(ticket.getSessionId());
+        var film = filmService.findByFilmId(filmSession.get().getFilmId());
         if (film.isEmpty()) {
             model.addAttribute("message", "This movie is not found");
             return "errors/404";
@@ -55,9 +55,9 @@ public class TicketController {
         newT.setRowNumber(ticket.getRowNumber());
         newT.setPlaceNumber(ticket.getPlaceNumber());
         newT.setUserId(ticket.getUserId());
-        var createdTicket = ticketService.createTicket(newT);
-        var filmSession = filmSessionService.findById(ticket.getSessionId());
-        var film = filmService.getByFilmId(filmSession.get().getFilmId());
+        var createdTicket = ticketService.addTicket(newT);
+        var filmSession = filmSessionService.findByFilmSessionId(ticket.getSessionId());
+        var film = filmService.findByFilmId(filmSession.get().getFilmId());
         if (createdTicket.isEmpty()) {
             model.addAttribute(
                     "message",

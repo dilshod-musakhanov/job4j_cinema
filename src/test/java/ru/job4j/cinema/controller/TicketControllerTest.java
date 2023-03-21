@@ -10,6 +10,8 @@ import ru.job4j.cinema.service.FilmService;
 import ru.job4j.cinema.service.FilmSessionService;
 import ru.job4j.cinema.service.TicketService;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.mockito.Mockito.mock;
@@ -22,6 +24,8 @@ public class TicketControllerTest {
     private FilmService filmService;
     private TicketService ticketService;
     private TicketController ticketController;
+    private static LocalDateTime startTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+    private static LocalDateTime endTime = startTime.plusMinutes(100).truncatedTo(ChronoUnit.MINUTES);
 
     @BeforeEach
     public void preLoad() {
@@ -29,6 +33,7 @@ public class TicketControllerTest {
         filmService = mock(FilmService.class);
         ticketService = mock(TicketService.class);
         ticketController = new TicketController(filmSessionService, filmService, ticketService);
+
     }
 
     @Test
@@ -44,8 +49,8 @@ public class TicketControllerTest {
                 2,
                 1,
                 3,
-                "2023-03-15 21:00:00",
-                "2023-03-15 23:00:00"
+                startTime,
+                endTime
         ));
         Optional<Film> film = Optional.of(new Film(
                 1,
@@ -58,8 +63,8 @@ public class TicketControllerTest {
                 3
                 )
         );
-        when(filmSessionService.findById(ticket.getSessionId())).thenReturn(filmSession);
-        when(filmService.getByFilmId(filmSession.get().getFilmId())).thenReturn(film);
+        when(filmSessionService.findByFilmSessionId(ticket.getSessionId())).thenReturn(filmSession);
+        when(filmService.findByFilmId(filmSession.get().getFilmId())).thenReturn(film);
         var model = new ConcurrentModel();
         var view = ticketController.confirmTicket(model, ticket);
         assertThat(view).isEqualTo("ticket/confirmTicket");
@@ -85,8 +90,8 @@ public class TicketControllerTest {
                 2,
                 1,
                 3,
-                "2023-03-15 21:00:00",
-                "2023-03-15 23:00:00"
+                startTime,
+                endTime
         ));
         Optional<Film> film = Optional.of(new Film(
                 1,
@@ -99,8 +104,8 @@ public class TicketControllerTest {
                 3
                 )
         );
-        when(filmSessionService.findById(ticket.getSessionId())).thenReturn(filmSession);
-        when(filmService.getByFilmId(filmSession.get().getFilmId())).thenReturn(film);
+        when(filmSessionService.findByFilmSessionId(ticket.getSessionId())).thenReturn(filmSession);
+        when(filmService.findByFilmId(filmSession.get().getFilmId())).thenReturn(film);
         var model = new ConcurrentModel();
         var view = ticketController.confirmTicket(model, ticket);
         assertThat(view).isEqualTo("errors/404");
@@ -125,8 +130,8 @@ public class TicketControllerTest {
                 2,
                 1,
                 3,
-                "2023-03-15 21:00:00",
-                "2023-03-15 23:00:00"
+                startTime,
+                endTime
         ));
         Optional<Film> film = Optional.of(new Film(
                 1,
@@ -139,9 +144,9 @@ public class TicketControllerTest {
                 3
                 )
         );
-        when(ticketService.createTicket(draftTicket)).thenReturn(Optional.of(newTicket));
-        when(filmSessionService.findById(draftTicket.getSessionId())).thenReturn(filmSession);
-        when(filmService.getByFilmId(filmSession.get().getFilmId())).thenReturn(film);
+        when(ticketService.addTicket(draftTicket)).thenReturn(Optional.of(newTicket));
+        when(filmSessionService.findByFilmSessionId(draftTicket.getSessionId())).thenReturn(filmSession);
+        when(filmService.findByFilmId(filmSession.get().getFilmId())).thenReturn(film);
         var model = new ConcurrentModel();
         var view = ticketController.confirmAndBuyTicket(model, draftTicket);
         assertThat(view).isEqualTo("success/ticketSuccess");
@@ -167,8 +172,8 @@ public class TicketControllerTest {
                 2,
                 1,
                 3,
-                "2023-03-15 21:00:00",
-                "2023-03-15 23:00:00"
+                startTime,
+                endTime
         ));
         Optional<Film> film = Optional.of(new Film(
                         1,
@@ -181,9 +186,9 @@ public class TicketControllerTest {
                         3
                 )
         );
-        when(ticketService.createTicket(draftTicket)).thenReturn(Optional.empty());
-        when(filmSessionService.findById(draftTicket.getSessionId())).thenReturn(filmSession);
-        when(filmService.getByFilmId(filmSession.get().getFilmId())).thenReturn(film);
+        when(ticketService.addTicket(draftTicket)).thenReturn(Optional.empty());
+        when(filmSessionService.findByFilmSessionId(draftTicket.getSessionId())).thenReturn(filmSession);
+        when(filmService.findByFilmId(filmSession.get().getFilmId())).thenReturn(film);
         var model = new ConcurrentModel();
         var view = ticketController.confirmAndBuyTicket(model, draftTicket);
         assertThat(view).isEqualTo("errors/ticket404");

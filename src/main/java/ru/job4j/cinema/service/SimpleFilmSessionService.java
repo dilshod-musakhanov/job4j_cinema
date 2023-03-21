@@ -23,16 +23,31 @@ public class SimpleFilmSessionService implements FilmSessionService {
     private final FilmRepository filmRepository;
     private final HallRepository hallRepository;
 
-    public SimpleFilmSessionService(FilmSessionRepository filmSessionRepository, FilmRepository filmRepository,
-                                    HallRepository hallRepository) {
-        this.filmSessionRepository = filmSessionRepository;
-        this.filmRepository = filmRepository;
-        this.hallRepository = hallRepository;
+    public SimpleFilmSessionService(FilmSessionRepository sql2oFilmSessionRepository, FilmRepository sql2oFilmRepository,
+                                    HallRepository sql2oHallRepository) {
+        this.filmSessionRepository = sql2oFilmSessionRepository;
+        this.filmRepository = sql2oFilmRepository;
+        this.hallRepository = sql2oHallRepository;
+    }
+
+    @Override
+    public Optional<FilmSession> addFilmSession(FilmSession filmSession) {
+        return filmSessionRepository.addFilmSession(filmSession);
     }
 
     @Override
     public Collection<FilmSession> findAllFilmSession() {
         return filmSessionRepository.findAllFilmSession();
+    }
+
+    @Override
+    public Optional<FilmSession> findByFilmSessionId(int id) {
+        return filmSessionRepository.findByFilmSessionId(id);
+    }
+
+    @Override
+    public boolean deleteByFilmSessionId(int id) {
+        return filmSessionRepository.deleteByFilmSessionId(id);
     }
 
     @Override
@@ -46,11 +61,6 @@ public class SimpleFilmSessionService implements FilmSessionService {
             filmSessionDtos.add(filmSessionDto);
         }
         return filmSessionDtos;
-    }
-
-    @Override
-    public Optional<FilmSession> findById(int id) {
-        return filmSessionRepository.findById(id);
     }
 
     private FilmSessionDto createDto(FilmSession filmSession, Map<Integer, String> films, Map<Integer, String> halls) {

@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping("/signUp")
     public String signUp(Model model, @ModelAttribute User user) {
-        Optional<User> signUpUser = userService.add(user);
+        Optional<User> signUpUser = userService.addUser(user);
         if (signUpUser.isEmpty()) {
             model.addAttribute(
                     "message",

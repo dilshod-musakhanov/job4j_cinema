@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface FilmService {
 
+    Optional<Film> addFilm(Film film);
     Collection<Film> findAll();
+    Optional<Film> findByFilmId(int filmId);
+    boolean deleteByFilmId(int id);
     Collection<FilmDto> findAllFilmDto();
-    Optional<Film> getByFilmId(int filmId);
 }

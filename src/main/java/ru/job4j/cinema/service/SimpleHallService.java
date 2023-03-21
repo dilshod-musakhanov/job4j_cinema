@@ -6,6 +6,7 @@ import ru.job4j.cinema.model.Hall;
 import ru.job4j.cinema.repository.HallRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class SimpleHallService implements HallService {
@@ -17,8 +18,23 @@ public class SimpleHallService implements HallService {
     }
 
     @Override
+    public Optional<Hall> addHall(Hall hall) {
+        return hallRepository.addHall(hall);
+    }
+
+    @Override
     public Collection<Hall> findAll() {
         return hallRepository.findAll();
+    }
+
+    @Override
+    public Optional<Hall> findByHallId(int id) {
+        return hallRepository.findByHallId(id);
+    }
+
+    @Override
+    public boolean deleteByHallId(int id) {
+        return hallRepository.deleteByHallId(id);
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.repository.UserRepository;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -16,8 +17,8 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public Optional<User> add(User user) {
-        return userRepository.add(user);
+    public Optional<User> addUser(User user) {
+        return userRepository.addUser(user);
     }
 
     @Override
@@ -26,7 +27,17 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public Optional<User> findById(int id) {
-        return userRepository.findById(id);
+    public Optional<User> findByUserId(int id) {
+        return userRepository.findByUserId(id);
+    }
+
+    @Override
+    public Collection<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public boolean deleteUserById(int id) {
+        return userRepository.deleteUserById(id);
     }
 }

@@ -45,7 +45,7 @@ public class UserControllerTest {
                 "bobik"
                 );
         var argUser = ArgumentCaptor.forClass(User.class);
-        when(userService.add(argUser.capture())).thenReturn(Optional.of(newUser));
+        when(userService.addUser(argUser.capture())).thenReturn(Optional.of(newUser));
         var model = new ConcurrentModel();
         var view = userController.signUp(model, newUser);
         var actualUser = argUser.getValue();
@@ -61,7 +61,7 @@ public class UserControllerTest {
                 "bob@bob.com",
                 "bobik"
         );
-        when(userService.add(newUser)).thenReturn(Optional.empty());
+        when(userService.addUser(newUser)).thenReturn(Optional.empty());
         var model = new ConcurrentModel();
         var view = userController.signUp(model, newUser);
         assertThat(view).isEqualTo("errors/404");

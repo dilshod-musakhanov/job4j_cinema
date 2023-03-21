@@ -32,13 +32,13 @@ public class FilmSessionController {
 
     @GetMapping("/{id}")
     public String findById(Model model, @PathVariable int id) {
-        var optionalFilmSession = filmSessionService.findById(id);
+        var optionalFilmSession = filmSessionService.findByFilmSessionId(id);
         if (optionalFilmSession.isEmpty()) {
             model.addAttribute("message", "This film session is no longer available");
             return "errors/404";
         }
         var filmSession = optionalFilmSession.get();
-        var filmSessionFilm = filmService.getByFilmId(filmSession.getFilmId()).get();
+        var filmSessionFilm = filmService.findByFilmId(filmSession.getFilmId()).get();
         model.addAttribute("sessionId", filmSession.getId());
         model.addAttribute("rows", hallService.getRowCountByHallId(filmSession.getHallsId()));
         model.addAttribute("places", hallService.getPlacesCountByHallId(filmSession.getHallsId()));

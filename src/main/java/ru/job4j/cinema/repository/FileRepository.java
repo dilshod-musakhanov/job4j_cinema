@@ -6,5 +6,7 @@ import java.util.Optional;
 
 public interface FileRepository {
 
-    Optional<File> findById(int id);
+    Optional<File> addFile(File file);
+    Optional<File> findByFileId(int id);
+    boolean deleteByFileId(int id);
 }

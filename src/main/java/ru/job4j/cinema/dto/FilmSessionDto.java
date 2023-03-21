@@ -1,6 +1,7 @@
 package ru.job4j.cinema.dto;
 
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class FilmSessionDto {
@@ -8,13 +9,13 @@ public class FilmSessionDto {
     private int id;
     private String film;
     private String hall;
-    private String startTime;
-    private String endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     public FilmSessionDto() {
     }
 
-    public FilmSessionDto(int id, String film, String hall, String startTime, String endTime) {
+    public FilmSessionDto(int id, String film, String hall, LocalDateTime startTime, LocalDateTime endTime) {
         this.id = id;
         this.film = film;
         this.hall = hall;
@@ -46,19 +47,19 @@ public class FilmSessionDto {
         this.hall = hall;
     }
 
-    public String getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -77,5 +78,16 @@ public class FilmSessionDto {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getFilm(), getHall());
+    }
+
+    @Override
+    public String toString() {
+        return "FilmSessionDto{"
+                + "id=" + id
+                + ", film='" + film + '\''
+                + ", hall='" + hall + '\''
+                + ", startTime=" + startTime
+                + ", endTime=" + endTime
+                + '}';
     }
 }

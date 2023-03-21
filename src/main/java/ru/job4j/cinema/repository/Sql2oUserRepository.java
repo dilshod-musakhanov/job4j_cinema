@@ -5,6 +5,7 @@ import org.sql2o.Sql2o;
 import ru.job4j.cinema.model.User;
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
@@ -19,7 +20,7 @@ public class Sql2oUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> add(User user) {
+    public Optional<User> addUser(User user) {
         Optional<User> optionalUser = Optional.empty();
         try (var connection = sql2o.open()) {
             var query = connection.createQuery(
@@ -58,7 +59,7 @@ public class Sql2oUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(int id) {
+    public Optional<User> findByUserId(int id) {
         Optional<User> optionalUser;
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM users WHERE id = :id")
@@ -69,6 +70,25 @@ public class Sql2oUserRepository implements UserRepository {
                 LOG.error("Exception in finding User by id :" + id);
             }
             return Optional.ofNullable(user);
+        }
+    }
+
+    @Override
+    public Collection<User> findAll() {
+        try (var connection = sql2o.open()) {
+            var query = connection.createQuery("SELECT * FROM users");
+            return query.setColumnMappings(User.COLUMN_MAPPING).executeAndFetch(User.class);
+        }
+    }
+
+    @Override
+    public boolean deleteUserById(int id) {
+        try (var connection = sql2o.open()) {
+            var query = connection.createQuery("DELETE FROM users WHERE id = :id")
+                    .addParameter("id", id).executeUpdate().getResult();
+            connection.createQuery("TRUNCATE TABLE users RESTART IDENTITY").executeUpdate();
+            connection.commit();
+            return query > 0;
         }
     }
 }

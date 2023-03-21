@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public interface FilmSessionRepository {
 
+    Optional<FilmSession> addFilmSession(FilmSession filmSession);
     Collection<FilmSession> findAllFilmSession();
-
-    Optional<FilmSession> findById(int id);
-
+    Optional<FilmSession> findByFilmSessionId(int id);
+    boolean deleteByFilmSessionId(int id);
 }

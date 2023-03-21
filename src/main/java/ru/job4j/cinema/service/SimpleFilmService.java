@@ -26,8 +26,23 @@ public class SimpleFilmService implements FilmService {
     }
 
     @Override
+    public Optional<Film> addFilm(Film film) {
+        return filmRepository.addFilm(film);
+    }
+
+    @Override
+    public boolean deleteByFilmId(int id) {
+        return filmRepository.deleteByFilmId(id);
+    }
+
+    @Override
     public Collection<Film> findAll() {
         return filmRepository.findAll();
+    }
+
+    @Override
+    public Optional<Film> findByFilmId(int filmId) {
+        return filmRepository.findByFilmId(filmId);
     }
 
     @Override
@@ -40,11 +55,6 @@ public class SimpleFilmService implements FilmService {
             filmDtos.add(filmDto);
         }
         return filmDtos;
-    }
-
-    @Override
-    public Optional<Film> getByFilmId(int filmId) {
-        return filmRepository.getByFilmId(filmId);
     }
 
     private FilmDto createDto(Map<Integer, Genre> genres, Film film) {

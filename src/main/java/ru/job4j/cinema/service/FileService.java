@@ -7,5 +7,8 @@ import java.util.Optional;
 
 public interface FileService {
 
+    Optional<File> addFile(File file);
+    Optional<File> findByFileId(int id);
+    boolean deleteByFileId(int id);
     Optional<FileDto> getFileById(int id);
 }
