@@ -1,5 +1,6 @@
 package ru.job4j.cinema.controller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -28,6 +29,14 @@ public class UserControllerTest {
         request = mock(HttpServletRequest.class);
         session = mock(HttpSession.class);
         userController = new UserController(userService);
+    }
+
+    @AfterEach
+    public void clearUsers() {
+        var users = userService.findAll();
+        for (var user : users) {
+            userService.deleteUserById(user.getId());
+        }
     }
 
     @Test

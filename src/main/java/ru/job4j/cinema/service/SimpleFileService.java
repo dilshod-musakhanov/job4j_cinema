@@ -8,6 +8,7 @@ import ru.job4j.cinema.repository.FileRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,11 @@ public class SimpleFileService implements FileService {
     @Override
     public Optional<File> findByFileId(int id) {
         return fileRepository.findByFileId(id);
+    }
+
+    @Override
+    public Collection<File> findAll() {
+        return fileRepository.findAll();
     }
 
     @Override

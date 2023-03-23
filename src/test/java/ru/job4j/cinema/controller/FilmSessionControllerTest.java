@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalTime.now;
 import static org.mockito.Mockito.mock;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
