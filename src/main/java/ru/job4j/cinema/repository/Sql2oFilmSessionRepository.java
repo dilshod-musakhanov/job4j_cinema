@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
 import ru.job4j.cinema.model.FilmSession;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -42,11 +44,15 @@ public class Sql2oFilmSessionRepository implements FilmSessionRepository {
 
     @Override
     public Collection<FilmSession> findAllFilmSession() {
+        Collection<FilmSession> filmSessions = new ArrayList<>();
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM film_sessions");
-            query.setColumnMappings(FilmSession.COLUMN_MAPPING);
-            return query.executeAndFetch(FilmSession.class);
+            filmSessions = query.setColumnMappings(FilmSession.COLUMN_MAPPING)
+                    .executeAndFetch(FilmSession.class);
+        } catch (Exception e) {
+            LOG.error("Exception in finding all FilmSession: " + e);
         }
+        return filmSessions;
     }
 
     @Override
@@ -57,20 +63,23 @@ public class Sql2oFilmSessionRepository implements FilmSessionRepository {
             query.addParameter("id", id);
             var filmSession = query.setColumnMappings(FilmSession.COLUMN_MAPPING).executeAndFetchFirst(FilmSession.class);
             optionalFilmSession = Optional.ofNullable(filmSession);
-            if (optionalFilmSession.isEmpty()) {
-                LOG.error("Exception in finding FilmSession by id " + id);
-            }
-            return optionalFilmSession;
+        } catch (Exception e) {
+            LOG.error("Exception in finding FilmSession by id: " + id + " : " + e);
         }
+        return optionalFilmSession;
     }
 
     @Override
     public boolean deleteByFilmSessionId(int id) {
+        boolean result = false;
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("DELETE FROM film_sessions WHERE id = :id");
             query.addParameter("id", id);
             var affectedRows = query.executeUpdate().getResult();
-            return affectedRows > 0;
+            result = affectedRows > 0;
+        } catch (Exception e) {
+            LOG.error("Exception in deleting FilmSession by id: " + id + " : " + e);
         }
+        return result;
     }
 }

@@ -44,37 +44,42 @@ public class Sql2oHallRepository implements HallRepository {
 
     @Override
     public Collection<Hall> findAll() {
+        Collection<Hall> halls = new ArrayList<>();
         try (var connection = sql2o.open()) {
-            var query = connection.createQuery("SELECT * FROM halls")
-                    .setColumnMappings(Hall.COLUMN_MAPPING)
-                    .executeAndFetch(Hall.class);
-            return query;
+            var query = connection.createQuery("SELECT * FROM halls");
+            halls = query.setColumnMappings(Hall.COLUMN_MAPPING).executeAndFetch(Hall.class);
+        } catch (Exception e) {
+            LOG.error("Exception in finding all Hall: " + e);
         }
+        return halls;
     }
 
     @Override
     public Optional<Hall> findByHallId(int id) {
-        Optional<Hall> optionalHall;
+        Optional<Hall> optionalHall = Optional.empty();
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM halls WHERE id = :id")
                     .addParameter("id", id);
             var hall = query.setColumnMappings(Hall.COLUMN_MAPPING).executeAndFetchFirst(Hall.class);
             optionalHall = Optional.ofNullable(hall);
-            if (optionalHall.isEmpty()) {
-                LOG.error("Exception in finding Hall by id :" + id);
-            }
-            return Optional.ofNullable(hall);
+        } catch (Exception e) {
+            LOG.error("Exception in finding Hall by id :" + id + " : " + e);
         }
+        return optionalHall;
     }
 
     @Override
     public boolean deleteByHallId(int id) {
+        boolean result = false;
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("DELETE FROM halls WHERE id = :id")
-                    .addParameter("id", id).executeUpdate().getResult();
-            connection.commit();
-            return query > 0;
+                    .addParameter("id", id);
+            var affectedRows = query.executeUpdate().getResult();
+            result = affectedRows > 0;
+        } catch (Exception e) {
+            LOG.error("Exception in deleting Hall by id: " + id + " : " + id);
         }
+        return result;
     }
 
     @Override
@@ -89,6 +94,8 @@ public class Sql2oHallRepository implements HallRepository {
             for (int i = 1; i <= total; i++) {
                 rows.add(i);
             }
+        } catch (Exception e) {
+            LOG.error("Exception in getting row count by Hall id: " + hallId + " : " + e);
         }
         return rows;
     }
@@ -105,6 +112,8 @@ public class Sql2oHallRepository implements HallRepository {
             for (int i = 1; i <= total; i++) {
                 places.add(i);
             }
+        } catch (Exception e) {
+            LOG.error("Exception in getting places count by Hall id: " + hallId + " : " + e);
         }
         return places;
     }

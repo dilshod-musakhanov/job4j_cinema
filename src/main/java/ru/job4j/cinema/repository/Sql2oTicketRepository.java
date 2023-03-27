@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
 import ru.job4j.cinema.model.Ticket;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -43,11 +44,14 @@ public class Sql2oTicketRepository implements TicketRepository {
 
     @Override
     public Collection<Ticket> findAll() {
+        Collection<Ticket> tickets = new ArrayList<>();
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM tickets");
-            var res = query.setColumnMappings(Ticket.COLUMN_MAPPING).executeAndFetch(Ticket.class);
-            return res;
+            tickets = query.setColumnMappings(Ticket.COLUMN_MAPPING).executeAndFetch(Ticket.class);
+        } catch (Exception e) {
+            LOG.error("Exception in finding all Ticket: " + e);
         }
+        return tickets;
     }
 
     @Override
@@ -58,20 +62,23 @@ public class Sql2oTicketRepository implements TicketRepository {
             query.addParameter("id", id);
             var ticket = query.setColumnMappings(Ticket.COLUMN_MAPPING).executeAndFetchFirst(Ticket.class);
             optionalTicket = Optional.ofNullable(ticket);
-            if (optionalTicket.isEmpty()) {
-                LOG.error("Exception in finding Ticket by id: " + id);
-            }
-            return optionalTicket;
+        } catch (Exception e) {
+            LOG.error("Exception in finding Ticket by id: " + id + " : " + e);
         }
+        return optionalTicket;
     }
 
     @Override
     public boolean deleteTicketById(int id) {
+        boolean result = false;
         try (var connection = sql2o.open()) {
-            var query = connection.createQuery("DELETE FROM tickets WHERE id = :id");
-            query.addParameter("id", id);
+            var query = connection.createQuery("DELETE FROM tickets WHERE id = :id")
+                    .addParameter("id", id);
             var affectedRows = query.executeUpdate().getResult();
-            return affectedRows > 0;
+            result =  affectedRows > 0;
+        } catch (Exception e) {
+            LOG.error("Exception in deleting Ticket by id: " + id + " : " + e);
         }
+        return result;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
 import ru.job4j.cinema.model.Genre;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -46,28 +47,36 @@ public class Sql2oGenreRepository implements GenreRepository {
             query.addParameter("id", id);
             var genre = query.executeAndFetchFirst(Genre.class);
             optionalGenre = Optional.ofNullable(genre);
-            if (optionalGenre.isEmpty()) {
-                LOG.error("Exception in finding Genre by id: " + id);
-            }
             return optionalGenre;
+        } catch (Exception e) {
+            LOG.error("Exception in finding Genre by id: " + id + " : " + e);
         }
+        return optionalGenre;
     }
 
     @Override
     public Collection<Genre> findAll() {
+        Collection<Genre> genres = new ArrayList<>();
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM genres");
-            return query.executeAndFetch(Genre.class);
+            genres = query.executeAndFetch(Genre.class);
+        } catch (Exception e) {
+            LOG.error("Exception in finding all Genre: " + e);
         }
+        return genres;
     }
 
     @Override
     public boolean deleteByGenreId(int id) {
+        boolean result = false;
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("DELETE FROM genres WHERE id = :id");
             query.addParameter("id", id);
             var affectedRows = query.executeUpdate().getResult();
-            return affectedRows > 0;
+            result = affectedRows > 0;
+        } catch (Exception e) {
+            LOG.error("Exception in deleting Genre by id: " + id + " : " + e);
         }
+        return result;
     }
 }

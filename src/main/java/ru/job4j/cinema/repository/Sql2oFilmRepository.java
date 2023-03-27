@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
 import ru.job4j.cinema.model.Film;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -40,37 +41,48 @@ public class Sql2oFilmRepository implements FilmRepository {
             film.setId(generatedId);
             optionalFilm = Optional.of(film);
         } catch (Exception e) {
-            LOG.error("Exception in adding Film " + film + " " + e);
+            LOG.error("Exception in adding Film: " + film + " : " + e);
         }
         return optionalFilm;
     }
 
     @Override
     public boolean deleteByFilmId(int id) {
+        boolean result = false;
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("DELETE FROM films WHERE id = :id");
             query.addParameter("id", id);
             var affectedRows = query.executeUpdate().getResult();
-            return affectedRows > 0;
+            result = affectedRows > 0;
+        } catch (Exception e) {
+            LOG.error("Exception in deleting Film by id: " + id + " : " + e);
         }
+        return result;
     }
 
     @Override
     public Collection<Film> findAll() {
+        Collection<Film> films = new ArrayList<>();
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM films");
-            return query.setColumnMappings(Film.COLUMN_MAPPING).executeAndFetch(Film.class);
+            films = query.setColumnMappings(Film.COLUMN_MAPPING).executeAndFetch(Film.class);
+        } catch (Exception e) {
+            LOG.error("Exception in finding all Films: " + e);
         }
+        return films;
     }
 
     @Override
     public Optional<Film> findByFilmId(int id) {
+        Film film = new Film();
         try (var connection = sql2o.open()) {
-            var query = connection.createQuery("SELECT * FROM films WHERE id = :id");
-            query.addParameter("id", id);
-            var film = query.setColumnMappings(Film.COLUMN_MAPPING).executeAndFetchFirst(Film.class);
-            return Optional.ofNullable(film);
+            var query = connection.createQuery("SELECT * FROM films WHERE id = :id")
+                    .addParameter("id", id);
+            film = query.setColumnMappings(Film.COLUMN_MAPPING).executeAndFetchFirst(Film.class);
+        } catch (Exception e) {
+            LOG.error("Exception in finding Film by id: " + id + " : " + e);
         }
+        return Optional.ofNullable(film);
     }
 
 }
