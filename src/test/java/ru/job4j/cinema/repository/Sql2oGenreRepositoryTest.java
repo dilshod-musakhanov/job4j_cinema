@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.cinema.config.DatasourceConfiguration;
 import ru.job4j.cinema.model.Genre;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
@@ -19,9 +18,10 @@ public class Sql2oGenreRepositoryTest {
 
     private static Sql2oGenreRepository genreRepository;
     private static Sql2oFilmRepository filmRepository;
+    private static Sql2oFilmSessionRepository filmSessionRepository;
 
     @BeforeAll
-    public static void initRepositories() throws IOException {
+    public static void initRepositories() throws Exception {
         var properties = new Properties();
         try (var inStream = Sql2oGenreRepositoryTest.class
                 .getClassLoader()
@@ -38,18 +38,50 @@ public class Sql2oGenreRepositoryTest {
 
         genreRepository = new Sql2oGenreRepository(sql2o);
         filmRepository = new Sql2oFilmRepository(sql2o);
+        filmSessionRepository = new Sql2oFilmSessionRepository(sql2o);
+
+        try (var connection = datasource.getConnection();
+            var st = connection.prepareStatement("DELETE FROM film_sessions")) {
+            st.executeUpdate();
+        }
+
+        try (var connection = datasource.getConnection();
+             var st = connection.prepareStatement("DELETE FROM films")) {
+            st.executeUpdate();
+        }
+
+        try (var connection = datasource.getConnection();
+            var st = connection.prepareStatement("DELETE FROM genres")) {
+            st.executeUpdate();
+        }
     }
 
     @AfterAll
     public static void deleteRep() {
+        var fs = filmSessionRepository.findAllFilmSession();
+        for (var filmSession : fs) {
+            filmSessionRepository.deleteByFilmSessionId(filmSession.getId());
+        }
         var films = filmRepository.findAll();
         for (var film : films) {
             filmRepository.deleteByFilmId(film.getId());
+        }
+        var genres = genreRepository.findAll();
+        for (var genre : genres) {
+            genreRepository.deleteByGenreId(genre.getId());
         }
     }
 
     @AfterEach
     public void clearGenre() {
+        var fs = filmSessionRepository.findAllFilmSession();
+        for (var filmsession : fs) {
+            filmSessionRepository.deleteByFilmSessionId(filmsession.getId());
+        }
+        var films = filmRepository.findAll();
+        for (var film : films) {
+            filmRepository.deleteByFilmId(film.getId());
+        }
         var genres = genreRepository.findAll();
         for (var genre : genres) {
             genreRepository.deleteByGenreId(genre.getId());

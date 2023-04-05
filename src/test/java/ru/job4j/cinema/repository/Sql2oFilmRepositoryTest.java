@@ -49,6 +49,11 @@ public class Sql2oFilmRepositoryTest {
         genre = new Genre(1, "History");
         genreRepository.addGenre(genre);
 
+        var films = filmRepository.findAll();
+        for (var film : films) {
+            filmRepository.deleteByFilmId(film.getId());
+        }
+
     }
 
     @AfterAll

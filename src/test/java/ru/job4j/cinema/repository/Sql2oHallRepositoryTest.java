@@ -36,6 +36,11 @@ public class Sql2oHallRepositoryTest {
 
         hallRepository = new Sql2oHallRepository(sql2o);
         filmSessionRepository = new Sql2oFilmSessionRepository(sql2o);
+
+        try (var connection = datasource.getConnection();
+            var st = connection.prepareStatement("DELETE FROM halls")) {
+            st.executeUpdate();
+        }
     }
 
     @AfterAll
@@ -43,6 +48,10 @@ public class Sql2oHallRepositoryTest {
         var filmSessions = filmSessionRepository.findAllFilmSession();
         for (var filmSession : filmSessions) {
             filmSessionRepository.deleteByFilmSessionId(filmSession.getId());
+        }
+        var halls = hallRepository.findAll();
+        for (var hall : halls) {
+            hallRepository.deleteByHallId(hall.getId());
         }
     }
 

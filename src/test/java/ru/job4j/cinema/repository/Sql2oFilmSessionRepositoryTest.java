@@ -84,6 +84,11 @@ public class Sql2oFilmSessionRepositoryTest {
                 "private"
         );
         hallRepository.addHall(hall);
+
+        var filmSessions = filmSessionRepository.findAllFilmSession();
+        for (var filmSession : filmSessions) {
+            filmSessionRepository.deleteByFilmSessionId(filmSession.getId());
+        }
     }
 
     @AfterAll

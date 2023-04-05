@@ -1,10 +1,12 @@
 package ru.job4j.cinema.repository;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.job4j.cinema.config.DatasourceConfiguration;
 import ru.job4j.cinema.model.File;
+
 
 import static java.util.Optional.empty;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -15,6 +17,8 @@ import java.util.Properties;
 public class Sql2oFileRepositoryTest {
 
     private static Sql2oFileRepository fileRepository;
+    private static Sql2oFilmRepository filmRepository;
+    private static Sql2oFilmSessionRepository filmSessionRepository;
 
     @BeforeAll
     public static void initRepositories() throws Exception {
@@ -33,10 +37,52 @@ public class Sql2oFileRepositoryTest {
         var sql2o = configuration.databaseClient(datasource);
 
         fileRepository = new Sql2oFileRepository(sql2o);
+        filmRepository = new Sql2oFilmRepository(sql2o);
+        filmSessionRepository =  new Sql2oFilmSessionRepository(sql2o);
+
+        try (var connection = datasource.getConnection();
+             var st = connection.prepareStatement("DELETE FROM film_sessions")) {
+            st.executeUpdate();
+        }
+
+        try (var connection = datasource.getConnection();
+             var st = connection.prepareStatement("DELETE FROM films")) {
+            st.executeUpdate();
+        }
+
+        try (var connection = datasource.getConnection();
+             var st = connection.prepareStatement("DELETE FROM files")) {
+            st.executeUpdate();
+        }
+
+    }
+
+    @AfterAll
+    public static void clearFilesAgain() {
+        var fs = filmSessionRepository.findAllFilmSession();
+        for (var filmsession : fs) {
+            filmSessionRepository.deleteByFilmSessionId(filmsession.getId());
+        }
+        var films = filmRepository.findAll();
+        for (var film : films) {
+            filmRepository.deleteByFilmId(film.getId());
+        }
+        var files = fileRepository.findAll();
+        for (var file : files) {
+            fileRepository.deleteByFileId(file.getId());
+        }
     }
 
     @AfterEach
     public void clearFiles() {
+        var fs = filmSessionRepository.findAllFilmSession();
+        for (var filmSession : fs) {
+            filmSessionRepository.deleteByFilmSessionId(filmSession.getId());
+        }
+        var films = filmRepository.findAll();
+        for (var film : films) {
+            filmRepository.deleteByFilmId(film.getId());
+        }
         var files = fileRepository.findAll();
         for (var file : files) {
             fileRepository.deleteByFileId(file.getId());
@@ -82,4 +128,5 @@ public class Sql2oFileRepositoryTest {
         assertThat(isDeleted).isTrue();
         assertThat(empty).usingRecursiveComparison().isEqualTo(empty());
     }
+
 }
